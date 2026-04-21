@@ -26,8 +26,38 @@ public class MoneyTest {
     }
 
     @Test
-    public void testAdd() {
-        Money sum = Money.dollar(5).plus(Money.dollar(3));
-        assertEquals(Money.dollar(8), sum);
+    public void testSimpleAddition() {
+        Money five = Money.dollar(5);
+        Expression sum = five.plus(five);
+        Bank bank = new Bank();
+        Money reduced = bank.reduce(sum, "USD");
+        assertEquals(Money.dollar(10), reduced);
+    }
+
+    // sumが（Money, Money）の式を持つことのテスト
+    @Test
+    public void testPlusReturnsSum() {
+        Money five = Money.dollar(5);
+        Expression result = five.plus(five);
+        Sum sum = (Sum) result;
+        assertEquals(five, sum.augend);
+        assertEquals(five, sum.addend);
+    }
+
+    // 3ドル + 4ドルがSum expressionで7ドルになることを確認
+    @Test
+    public void testReducedSum() {
+        Expression sum = new Sum(Money.dollar(3), Money.dollar(4));
+        Bank bank = new Bank();
+        Money result = bank.reduce(sum, "USD");
+        assertEquals(Money.dollar(7), result);
+    }
+
+    // Bankのreduceメソッドに渡すExpressionがMoneyの場合
+    @Test
+    public void testReduceMoney() {
+        Bank bank = new Bank();
+        Money result = bank.reduce(Money.dollar(1), "USD");
+        assertEquals(Money.dollar(1), result);
     }
 }
