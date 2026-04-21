@@ -1,6 +1,6 @@
 package com.example;
 
-class Money {
+class Money implements Expression {
     protected int amount;
     protected String currency;
     Money(int amount, String currency) {
